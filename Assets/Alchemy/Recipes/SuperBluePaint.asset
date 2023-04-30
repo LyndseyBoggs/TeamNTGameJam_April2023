@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 705dfcc94e2599d4bb3d791b340650e9, type: 3}
+  m_Name: SuperBluePaint
+  m_EditorClassIdentifier: 
+  input1: {fileID: 11400000, guid: f2e455a593e221344b5d326e1f4cec93, type: 2}
+  input2: {fileID: 11400000, guid: f2e455a593e221344b5d326e1f4cec93, type: 2}
+  output: {fileID: 11400000, guid: 37590fcbd9d0c12418302b909a615d43, type: 2}
