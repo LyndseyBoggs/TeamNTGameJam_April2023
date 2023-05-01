@@ -24,7 +24,7 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
     ""name"": ""PlayerInputs"",
     ""maps"": [
         {
-            ""name"": ""Movement"",
+            ""name"": ""General Input"",
             ""id"": ""b4c24f56-48a2-490d-8186-bc843d0a4594"",
             ""actions"": [
                 {
@@ -35,6 +35,15 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Toggle Character Sheet"",
+                    ""type"": ""Button"",
+                    ""id"": ""0382bc1c-638d-4b07-9485-187bbe4ff4eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""40671a30-1a15-45d3-935a-8753024d615b"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle Character Sheet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -104,9 +124,10 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // Movement
-        m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
-        m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
+        // General Input
+        m_GeneralInput = asset.FindActionMap("General Input", throwIfNotFound: true);
+        m_GeneralInput_Move = m_GeneralInput.FindAction("Move", throwIfNotFound: true);
+        m_GeneralInput_ToggleCharacterSheet = m_GeneralInput.FindAction("Toggle Character Sheet", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,38 +184,46 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Movement
-    private readonly InputActionMap m_Movement;
-    private IMovementActions m_MovementActionsCallbackInterface;
-    private readonly InputAction m_Movement_Move;
-    public struct MovementActions
+    // General Input
+    private readonly InputActionMap m_GeneralInput;
+    private IGeneralInputActions m_GeneralInputActionsCallbackInterface;
+    private readonly InputAction m_GeneralInput_Move;
+    private readonly InputAction m_GeneralInput_ToggleCharacterSheet;
+    public struct GeneralInputActions
     {
         private @PlayerInputs m_Wrapper;
-        public MovementActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Movement_Move;
-        public InputActionMap Get() { return m_Wrapper.m_Movement; }
+        public GeneralInputActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_GeneralInput_Move;
+        public InputAction @ToggleCharacterSheet => m_Wrapper.m_GeneralInput_ToggleCharacterSheet;
+        public InputActionMap Get() { return m_Wrapper.m_GeneralInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(MovementActions set) { return set.Get(); }
-        public void SetCallbacks(IMovementActions instance)
+        public static implicit operator InputActionMap(GeneralInputActions set) { return set.Get(); }
+        public void SetCallbacks(IGeneralInputActions instance)
         {
-            if (m_Wrapper.m_MovementActionsCallbackInterface != null)
+            if (m_Wrapper.m_GeneralInputActionsCallbackInterface != null)
             {
-                @Move.started -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_MovementActionsCallbackInterface.OnMove;
+                @Move.started -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnMove;
+                @ToggleCharacterSheet.started -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnToggleCharacterSheet;
+                @ToggleCharacterSheet.performed -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnToggleCharacterSheet;
+                @ToggleCharacterSheet.canceled -= m_Wrapper.m_GeneralInputActionsCallbackInterface.OnToggleCharacterSheet;
             }
-            m_Wrapper.m_MovementActionsCallbackInterface = instance;
+            m_Wrapper.m_GeneralInputActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @ToggleCharacterSheet.started += instance.OnToggleCharacterSheet;
+                @ToggleCharacterSheet.performed += instance.OnToggleCharacterSheet;
+                @ToggleCharacterSheet.canceled += instance.OnToggleCharacterSheet;
             }
         }
     }
-    public MovementActions @Movement => new MovementActions(this);
+    public GeneralInputActions @GeneralInput => new GeneralInputActions(this);
     private int m_DefaultInputsSchemeIndex = -1;
     public InputControlScheme DefaultInputsScheme
     {
@@ -204,8 +233,9 @@ public partial class @PlayerInputs : IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_DefaultInputsSchemeIndex];
         }
     }
-    public interface IMovementActions
+    public interface IGeneralInputActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnToggleCharacterSheet(InputAction.CallbackContext context);
     }
 }

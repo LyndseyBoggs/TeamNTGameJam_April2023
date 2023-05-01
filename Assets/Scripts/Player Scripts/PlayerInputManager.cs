@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerInputManager : MonoBehaviour
 {
     PlayerMovement playerMovement;
     PlayerInputs inputs;
 
     Vector2 desiredMovement;
+    private bool isCharSheetDisplayed = false;
 
     private void Awake()
     {
@@ -18,17 +19,19 @@ public class PlayerManager : MonoBehaviour
     private void OnEnable()
     {
         inputs.Enable();
-        inputs.Movement.Move.performed += OnMovePerformed;
-        inputs.Movement.Move.canceled += OnMoveCanceled;
+        inputs.GeneralInput.Move.performed += OnMovePerformed;
+        inputs.GeneralInput.Move.canceled += OnMoveCanceled;
+        inputs.GeneralInput.ToggleCharacterSheet.performed += OnToggleCharacterSheetPerformed;
     }
 
     private void OnDisable()
     {
         inputs.Disable();
-        inputs.Movement.Move.performed -= OnMovePerformed;
-        inputs.Movement.Move.canceled -= OnMoveCanceled;
+        inputs.GeneralInput.Move.performed -= OnMovePerformed;
+        inputs.GeneralInput.Move.canceled -= OnMoveCanceled;
+        inputs.GeneralInput.ToggleCharacterSheet.performed -= OnToggleCharacterSheetPerformed;
     }
-
+        
     private void FixedUpdate()
     {
         MovePlayer();
@@ -42,6 +45,14 @@ public class PlayerManager : MonoBehaviour
     void OnMoveCanceled(InputAction.CallbackContext context)
     {
         desiredMovement = Vector2.zero;
+    }
+
+    void OnToggleCharacterSheetPerformed(InputAction.CallbackContext context)
+    {
+        if (UIManager.Instance == null) return;
+
+        UIManager.Instance.ToggleCharacterSheet(!isCharSheetDisplayed);
+        isCharSheetDisplayed = !isCharSheetDisplayed;
     }
 
     void MovePlayer()

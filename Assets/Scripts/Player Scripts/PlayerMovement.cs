@@ -31,5 +31,6 @@ public class PlayerMovement : MonoBehaviour
     {
         var newPosition = transform.position + transform.up * speed * Time.deltaTime;
         rb.MovePosition(newPosition);
+        Debug.Log("Moving");
     }
 }
